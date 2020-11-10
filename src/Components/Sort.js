@@ -2,10 +2,6 @@ import { sortBy } from 'lodash';
 import React, { Component } from 'react'
 
 export default class Sort extends Component {
-  
-  componentWillReceiveProps(nextprops){
-    console.log(nextprops);
-  }
   onClick=(sortby,sortvalue)=>{
     this.props.onSort(sortby,sortvalue);
   }

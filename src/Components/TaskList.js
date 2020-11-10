@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import TaskItem from './TaskItem'
+import TaskItem from './TaskItem';
+import {connect} from 'react-redux';
 
-export default class TaskList extends Component {
+class TaskList extends Component {
   constructor(props){
     super(props);
     this.state={
@@ -29,7 +30,7 @@ export default class TaskList extends Component {
       var {tasks} = this.props;
       var {filterName,filterStatus}=this.state;
       var elementTask=tasks.map((task,index)=>{
-          return <TaskItem key={task.id} index={index} task={task} onUpdateStatus={this.props.onUpdateStatus}
+          return <TaskItem key={task.id} index={index} task={task}
           onDelete={this.props.onDelete}
           onUpdate={this.props.onUpdate}
           />
@@ -73,3 +74,9 @@ export default class TaskList extends Component {
         )
     }
 }
+const mapStateToProps=(state)=>{
+  return {
+    tasks:state.taskss
+  }
+};
+export default connect(mapStateToProps,null) (TaskList);

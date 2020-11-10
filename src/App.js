@@ -3,15 +3,15 @@ import './App.css'
 import Search_Sort from './Components/Search_Sort'
 import TaskList from './Components/TaskList'
 import TaskForm from './Components/TaskForm'
-import _, { sortBy } from 'lodash'
-import demo from './traning/demo'
+import _, { sortBy } from 'lodash';
+import {connect} from 'react-redux';
+import * as action from './actions/index';
+//import demo from './traning/demo'
 
-export default class App extends Component {
+ class App extends Component {
   constructor(props){
     super(props);
     this.state={
-      tasks:[], //id:unique , name, status
-      isDisplayForm:false,
       taskEditing:null,
       //cái filter tui để nó là 1 object
       filter:{
@@ -24,107 +24,12 @@ export default class App extends Component {
      sortValue:1
     }
   }
-  //sử dụng lycical . nó sẽ được gọi khi component đc gắn vào. hay nói cách khác khi reset lại thì hàm này sẽ được gọi
-  componentDidMount(){
-    if(localStorage && localStorage.getItem('tasks')){
-      var tasks=JSON.parse(localStorage.getItem('tasks'));
-      this.setState({
-        tasks:tasks
-      })
-    
-    }
-  }
-  // onGenerateData = () => {
-  //   var tasks=[
-  //             {id:this.generateID(),
-  //             name:'Lập trình web',
-  //             status:true},
-  //             {id:this.generateID(),
-  //             name:'Lập trình c++',
-  //             status:true},
-  //             {id:this.generateID(),
-  //             name:'Lập trình Phython',
-  //             status:false}  
-  //             ];
-  //   this.setState({
-  //     tasks:tasks
-  //   });
-  //   //lưu trên local storate và chuyển từ dạng object sang string
-  //   localStorage.setItem('tasks',JSON.stringify(tasks));
-  // }
-  s4(){
-    return Math.floor((1+Math.random())*0x10000).toString(16).substring(1);
-  }
-  generateID(){
-    return this.s4() +'-'+ this.s4() + '-'+this.s4()+'-'+this.s4()+'-'+this.s4()+'-'+this.s4()+'-'+this.s4();
-  }
-  onTogleFrom =()=>{ //Thêm Task
-      if(this.state.isDisplayForm && this.state.taskEditing !== null)
-      {
-        this.setState({
-          //isDisplayForm:true,
-          taskEditing:null
-        })
-      }
-      else{
-        this.setState({
-          isDisplayForm:!this.state.isDisplayForm,
-          taskEditing:null
-        })
-      }
-      
-
-  }
-  onCloseForm=()=>{
-    this.setState({
-      isDisplayForm:false
-    })
-  }
-  onSubmit = (data)=>{
-   
-    // var task={
-    //   id:this.generateID(),
-    //   name:data.name,
-    //   status:true
-    // }
-   
-    var {tasks}=this.state;
-    if(data.id===''){
-      data.id=this.generateID();
-      tasks.push(data);
-    }else{
-      //editting
-      var index = this.findIndex(data.id);
-      tasks[index]=data;
-
-    }
-    
-    this.setState({
-      tasks:tasks,
-      taskEditing:null
-    })
-    localStorage.setItem('tasks',JSON.stringify(tasks));
+  onTogleFrom =()=>{
+      this.props.onToggleform();
 
   }
  
-  onUpdateStatus=(id)=>{
-    var {tasks}=this.state;
-    // var index = this.findIndex(id);
-    var index=_.findIndex(tasks,(task)=>{
-        return task.id===id;
-    })
-    if(index!==-1){
-      tasks[index].status=!tasks[index].status;
-      this.setState({
-        tasks:tasks
-      })
-      localStorage.setItem('tasks',JSON.stringify(tasks));
-    }
-    else{
-      alert('không tìm thấy !!!');
-    }
 
-  }
   findIndex=(id)=>{
     var {tasks}=this.state;
     var result=-1;
@@ -160,7 +65,6 @@ export default class App extends Component {
   onUpdate=(id)=>{
     var {tasks}=this.state;
     var index = this.findIndex(id);
-    console.log(index);
     var taskEditing=tasks[index];
     this.setState({
       taskEditing:taskEditing
@@ -192,54 +96,16 @@ export default class App extends Component {
       sortBy:sortby,
       sortValue:sortvalue
     })
-    console.log(this.state);
   }
   render() {
-      var {tasks,
-        isDisplayForm,
-        filter,
-        keyword
-      ,sortBy,
-    sortValue} = this.state; // var tasks=this.state.tasks
-
-       if(filter){
-         if(filter.name){
-           tasks=tasks.filter((task)=>{
-             return task.name.toLowerCase().indexOf(filter.name)!==-1;
-           });
-         }
-         tasks=tasks.filter((task)=>{
-           if(filter.status===-1){
-        return task;
-         }
-        else{
-             return task.status===(filter.status===1?true:false);
-           }
-         }); 
-       }
-      if(keyword){
-        tasks=tasks.filter((task)=>{
-          return task.name.toLowerCase().indexOf(keyword)!==-1;
-        });
-      }
-      
-      if(sortBy==='name'){
-        tasks.sort((a,b)=>{
-          if(a.name>b.name) return sortValue;
-          else if(a.name<b.name) return -sortValue;
-        });
-      }else{
-        tasks.sort((a,b)=>{
-          if(a.status>b.status) return -sortValue;
-          else if(a.status<b.status) return sortValue;
-          else return 0;
-        });
-      }
+      var {
+     sortBy,
+        sortValue} = this.state; 
+        var {isDisplayForm}=this.props;
       var elementAddTask=isDisplayForm?<TaskForm
-      onSubmit={this.onSubmit}
-      onCloseFrom={this.onCloseForm}
       taskEditing={this.state.taskEditing}
        /> :'';
+      
       return (
      <div className="container">
         <div className="text-center">
@@ -260,11 +126,9 @@ export default class App extends Component {
                 sortValue={sortValue}
               />
             <div className="row mt-15">
-              <TaskList tasks={tasks}
-              onUpdateStatus={this.onUpdateStatus}
+              <TaskList 
               onDelete={this.onDelete}
               onUpdate={this.onUpdate}
-              //tạo 1 cái props pải k 
               onFilter={this.onFilter}
               />
             </div>
@@ -274,4 +138,16 @@ export default class App extends Component {
     )
   }
 }
-
+const mapstateToProps=state=>{
+  return {
+    isDisplayForm:state.isdisplayForm
+  }
+}
+const mapDispatchToProps=(dispatch,props)=>{
+    return {
+      onToggleform:()=>{
+        dispatch(action.toggleform())
+      }
+    }
+}
+export default connect(mapstateToProps,mapDispatchToProps) (App);
