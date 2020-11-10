@@ -3,7 +3,7 @@ import './App.css'
 import Search_Sort from './Components/Search_Sort'
 import TaskList from './Components/TaskList'
 import TaskForm from './Components/TaskForm'
-import _ from 'lodash'
+import _, { sortBy } from 'lodash'
 import demo from './traning/demo'
 
 export default class App extends Component {
@@ -20,10 +20,8 @@ export default class App extends Component {
       }
       ,
       keyword:'',
-      sort:{
-        by:'',
-        value:1
-      }
+     sortBy:'name',
+     sortValue:1
     }
   }
   //sử dụng lycical . nó sẽ được gọi khi component đc gắn vào. hay nói cách khác khi reset lại thì hàm này sẽ được gọi
@@ -189,10 +187,20 @@ export default class App extends Component {
     )
   }
   onSort=(sortby,sortvalue)=>{
-    console.log(sortby,'-',sortvalue);
+    
+    this.setState({
+      sortBy:sortby,
+      sortValue:sortvalue
+    })
+    console.log(this.state);
   }
   render() {
-      var {tasks,isDisplayForm,filter,keyword} = this.state; // var tasks=this.state.tasks
+      var {tasks,
+        isDisplayForm,
+        filter,
+        keyword
+      ,sortBy,
+    sortValue} = this.state; // var tasks=this.state.tasks
 
        if(filter){
          if(filter.name){
@@ -212,6 +220,19 @@ export default class App extends Component {
       if(keyword){
         tasks=tasks.filter((task)=>{
           return task.name.toLowerCase().indexOf(keyword)!==-1;
+        });
+      }
+      
+      if(sortBy==='name'){
+        tasks.sort((a,b)=>{
+          if(a.name>b.name) return sortValue;
+          else if(a.name<b.name) return -sortValue;
+        });
+      }else{
+        tasks.sort((a,b)=>{
+          if(a.status>b.status) return -sortValue;
+          else if(a.status<b.status) return sortValue;
+          else return 0;
         });
       }
       var elementAddTask=isDisplayForm?<TaskForm
@@ -235,6 +256,8 @@ export default class App extends Component {
             </button>
               <Search_Sort onSearch={this.onSearch}
                 onSort={this.onSort}
+                sortBy={sortBy}
+                sortValue={sortValue}
               />
             <div className="row mt-15">
               <TaskList tasks={tasks}

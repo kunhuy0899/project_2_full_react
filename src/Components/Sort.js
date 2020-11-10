@@ -2,14 +2,9 @@ import { sortBy } from 'lodash';
 import React, { Component } from 'react'
 
 export default class Sort extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      sort:{
-        by:'name',
-       value:1
-      }
-    }
+  
+  componentWillReceiveProps(nextprops){
+    console.log(nextprops);
   }
   onClick=(sortby,sortvalue)=>{
     this.props.onSort(sortby,sortvalue);
@@ -26,22 +21,22 @@ export default class Sort extends Component {
                     <li onClick={()=>this.onClick('name',1)}>
                       <a role="button" 
                  
-                      className={this.state.sort.by==='name'&&this.state.sort.value===1?'sort_selected':''}>
+                      className={this.props.sortBy==='name'&&this.props.sortValue===1?'sort_selected':''}>
                         <span className="bx bx-sort-a-z bx-tada" />Tên A-Z
                       </a>
                     </li>
                     <li onClick={()=>this.onClick('name',-1)}>
-                      <a role="button" className={this.state.sort.by==='name'&&this.state.sort.value===-1?'sort_selected':''}>
+                      <a role="button" className={this.props.sortBy==='name'&&this.props.sortValue===-1?'sort_selected':''}>
                         <span className="bx bx-sort-a-z bx-tada" />Tên z-A
                       </a>
                     </li>
                     <li onClick={()=>this.onClick('status',1)}>
-                      <a role="button" className={this.state.sort.by==='status'&&this.state.sort.value===1?'sort_selected':''}>
+                      <a role="button" className={this.props.sortBy==='status'&&this.props.sortValue===1?'sort_selected':''}>
                         Trạng thái kích hoạt
                       </a>
                     </li>
                     <li onClick={()=>this.onClick('status',-1)}>
-                      <a role="button" className={this.state.sort.by==='status'&&this.state.sort.value===-1?'sort_selected':''}>
+                      <a role="button" className={this.props.sortBy==='status'&&this.props.sortValue===-1?'sort_selected':''}>
                         Trạng thái ẩn
                       </a>
                     </li>
