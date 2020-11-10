@@ -6,14 +6,13 @@ import TaskForm from './Components/TaskForm'
 import _, { sortBy } from 'lodash';
 import {connect} from 'react-redux';
 import * as action from './actions/index';
-//import demo from './traning/demo'
 
  class App extends Component {
   constructor(props){
     super(props);
     this.state={
       taskEditing:null,
-      //cái filter tui để nó là 1 object
+
       filter:{
         name:'',
         status:-1
@@ -57,13 +56,10 @@ import * as action from './actions/index';
     this.onShowFrom();
   }
   onFilter=(filterName,filterStatus)=>{
-    //chổ này gtri ban đầu  mà gtri ban đầu nó trả về tk status la 1 cái mảng . mà tui đâu có khai báo nó là mảng đâu 
-    //chổ này ép kiểu
     filterStatus=parseInt(filterStatus,10) ;
     this.setState({
       filter:{
         name:filterName.toLowerCase(),
-        //chổ này gán vào state
         status:filterStatus
       }
     });

@@ -14,7 +14,7 @@ var s4=()=>{
         return result= index;
       }
     });
-    return result;  
+    return result;
   }
 var data=JSON.parse(localStorage.getItem('tasks'));
 var initialState=data?data:[];
@@ -31,7 +31,7 @@ var myReducer=(state=initialState,action)=>{
                 status:action.task.status
             }
             state.push(newTask);
-            localStorage.setItem('tasks',JSON.stringify(state)); 
+            localStorage.setItem('tasks',JSON.stringify(state));
             return [...state];
         case types.UPDATE_STATUS_TASK:
             var id=action.id;
