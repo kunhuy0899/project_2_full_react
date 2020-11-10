@@ -7,7 +7,8 @@ import * as actions from './../actions/index';
         this.props.onUpdateStatus(this.props.task.id);
     }
     onDelete=()=>{
-        this.props.onDelete(this.props.task.id);
+        this.props.onDeleteTask(this.props.task.id);
+        this.props.onToggleform();
     }
     onUpdate=()=>{
         this.props.onUpdate(this.props.task.id);
@@ -40,7 +41,13 @@ const  mapStateToProps=state=>{
     return {
         onUpdateStatus:(id)=>{
             dispatch(actions.updateStatusTask(id))
-        }
+        },
+        onDeleteTask:(id)=>{
+            dispatch(actions.deleteTask(id))
+        },
+        onToggleform:()=>{
+            dispatch(actions.toggleform())
+          }
     }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(TaskItem);

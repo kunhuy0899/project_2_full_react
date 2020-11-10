@@ -43,6 +43,13 @@ var myReducer=(state=initialState,action)=>{
             localStorage.setItem('tasks',JSON.stringify(state));
             console.log(state);
             return [...state];
+
+        case types.DELETE_TASK:
+            var id2=action.id;
+            var index2=findIndex(state,id2);
+            state.splice(index2,1);
+            localStorage.setItem('task',JSON.stringify(state));
+            return [...state];
         default: return state;
     }
  }

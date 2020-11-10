@@ -41,22 +41,7 @@ import * as action from './actions/index';
     });
     return result;  
   }
-  onDelete=(id)=>{
-    var {tasks}=this.state;
-    var index = this.findIndex(id);
-    if(index!==-1){
-      tasks.splice(index,1);
-     
-      this.setState({
-        tasks:tasks
-      })
-      localStorage.setItem('tasks',JSON.stringify(tasks));
-    }
-    else{
-      alert('không tìm thấy !!!');
-    }
-    this.onCloseForm();
-  }
+
   onShowFrom=()=>{
     this.setState({
       isDisplayForm:true
@@ -127,7 +112,6 @@ import * as action from './actions/index';
               />
             <div className="row mt-15">
               <TaskList 
-              onDelete={this.onDelete}
               onUpdate={this.onUpdate}
               onFilter={this.onFilter}
               />
