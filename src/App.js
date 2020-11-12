@@ -11,8 +11,6 @@ import * as action from './actions/index';
   constructor(props){
     super(props);
     this.state={
-      taskEditing:null,
-
       filter:{
         name:'',
         status:-1
@@ -24,36 +22,20 @@ import * as action from './actions/index';
     }
   }
   onTogleFrom =()=>{
+    var {itemEditting}=this.props;
+    console.log('edt',itemEditting);
+    if(itemEditting&&itemEditting.id!==''){
+      this.props.onOpenform();
+    }
+    else{
       this.props.onToggleform();
-
-  }
- 
-
-  findIndex=(id)=>{
-    var {tasks}=this.state;
-    var result=-1;
-    tasks.forEach((task,index)=>{
-      if(task.id===id)
-      {
-        return result= index;
-      }
+    }
+    this.props.onClearTask({
+      id:'',
+      name:'',
+      status:false
     });
-    return result;  
-  }
-
-  onShowFrom=()=>{
-    this.setState({
-      isDisplayForm:true
-    })
-  }
-  onUpdate=(id)=>{
-    var {tasks}=this.state;
-    var index = this.findIndex(id);
-    var taskEditing=tasks[index];
-    this.setState({
-      taskEditing:taskEditing
-    });
-    this.onShowFrom();
+      
   }
   onFilter=(filterName,filterStatus)=>{
     filterStatus=parseInt(filterStatus,10) ;
@@ -72,7 +54,6 @@ import * as action from './actions/index';
     )
   }
   onSort=(sortby,sortvalue)=>{
-    
     this.setState({
       sortBy:sortby,
       sortValue:sortvalue
@@ -83,10 +64,6 @@ import * as action from './actions/index';
      sortBy,
         sortValue} = this.state; 
         var {isDisplayForm}=this.props;
-      var elementAddTask=isDisplayForm?<TaskForm
-      taskEditing={this.state.taskEditing}
-       /> :'';
-      
       return (
      <div className="container">
         <div className="text-center">
@@ -94,7 +71,7 @@ import * as action from './actions/index';
         </div>
         <div className="row">
           <div className={isDisplayForm?'col-xs-4 col-sm-4 col-md-4 col-lg-4':''} >
-            {elementAddTask}
+          <TaskForm />
           </div>
           <div className={isDisplayForm===false ? 'col-xs-12 col-sm-12 col-md-12 col-lg-12':'col-xs-8 col-sm-8 col-md-8 col-lg-8'}>
             <button type="button" className="btn btn-primary" onClick={this.onTogleFrom}>
@@ -108,7 +85,6 @@ import * as action from './actions/index';
               />
             <div className="row mt-15">
               <TaskList 
-              onUpdate={this.onUpdate}
               onFilter={this.onFilter}
               />
             </div>
@@ -120,13 +96,20 @@ import * as action from './actions/index';
 }
 const mapstateToProps=state=>{
   return {
-    isDisplayForm:state.isdisplayForm
+    isDisplayForm:state.isdisplayForm,
+    itemEditting:state.itemEditting
   }
 }
 const mapDispatchToProps=(dispatch,props)=>{
     return {
       onToggleform:()=>{
         dispatch(action.toggleform())
+      },
+      onClearTask:(task)=>{
+        dispatch(action.editTask(task))
+      },
+      onOpenform:()=>{
+          dispatch(action.openform());
       }
     }
 }

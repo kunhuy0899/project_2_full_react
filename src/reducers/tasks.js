@@ -23,14 +23,19 @@ var myReducer=(state=initialState,action)=>{
     switch(action.type){
         case types.LIST_ALL:
             return state;
-        case types.ADD_TASK:
-            console.log(action)
-            var newTask={
-                id:generateID(),
-                name:action.task.name,
-                status:action.task.status
+        case types.SAVE_TASK:
+          var task={
+                  id:action.task.id,
+                  name:action.task.name,
+                  status:action.task.status
+          }
+            if(!task.id){
+              task.id=generateID();
+              state.push(task);
+            }else{
+                index=findIndex(state,task.id);
+                state[index]=task;
             }
-            state.push(newTask);
             localStorage.setItem('tasks',JSON.stringify(state));
             return [...state];
         case types.UPDATE_STATUS_TASK:
@@ -41,13 +46,12 @@ var myReducer=(state=initialState,action)=>{
                 status:!state[index].status
             }
             localStorage.setItem('tasks',JSON.stringify(state));
-            console.log(state);
             return [...state];
 
         case types.DELETE_TASK:
-            var id2=action.id;
-            var index2=findIndex(state,id2);
-            state.splice(index2,1);
+            var id=action.id;
+            var index=findIndex(state,id);
+            state.splice(index,1);
             localStorage.setItem('task',JSON.stringify(state));
             return [...state];
         default: return state;

@@ -8,10 +8,12 @@ import * as actions from './../actions/index';
     }
     onDelete=()=>{
         this.props.onDeleteTask(this.props.task.id);
-        this.props.onToggleform();
+     
     }
-    onUpdate=()=>{
-        this.props.onUpdate(this.props.task.id);
+    onEditTask=()=>{
+       
+        this.props.onOpenform();
+        this.props.onEditTask(this.props.task);
     }
     render() {
         var {task,index}=this.props;
@@ -23,7 +25,7 @@ import * as actions from './../actions/index';
                 onClick={this.onUpdateStatus}
                 >{task.status=== true ? 'kích hoạt':'ẩn'}</span></td>
                 <td className="text-center">
-                    <button type="button" className="btn btn-warning" onClick={this.onUpdate}><span className="bx bxs-pencil bx-tada mr-5"
+                    <button type="button" className="btn btn-warning" onClick={this.onEditTask}><span className="bx bxs-pencil bx-tada mr-5"
                      />Sửa</button>&nbsp;
                     <button type="button" className="btn btn-danger"
                     onClick={this.onDelete}
@@ -45,9 +47,15 @@ const  mapStateToProps=state=>{
         onDeleteTask:(id)=>{
             dispatch(actions.deleteTask(id))
         },
-        onToggleform:()=>{
-            dispatch(actions.toggleform())
-          }
+        onOpenform:()=>{
+            dispatch(actions.openform());
+        },
+        onCloseForm: ()=>{
+            dispatch(actions.closeform());
+        },
+        onEditTask:(task)=>{
+            dispatch(actions.editTask(task));
+        }
     }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(TaskItem);

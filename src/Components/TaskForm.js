@@ -7,28 +7,31 @@ import * as actions from './../actions/index';
     this.state={
       id:'',
       name:'',
-      status:true
+      status:false
     }
   }
   //sử dụng lycecal
   componentWillMount(){
-      if(this.props.taskEditing){
+      if(this.props.itemEditting){
         this.setState({
-          id:this.props.taskEditing.id,
-          name:this.props.taskEditing.name,
-          status:this.props.taskEditing.status
+          id:this.props.itemEditting.id,
+          name:this.props.itemEditting.name,
+          status:this.props.itemEditting.status
         });
+      }
+      else{
+        this.onClear();
       }
   }
   componentWillReceiveProps(nextProps){
-    if(nextProps && nextProps.taskEditing){
+    if(nextProps && nextProps.itemEditting){
       this.setState({
-        id:nextProps.taskEditing.id,
-        name:nextProps.taskEditing.name,
-        status:nextProps.taskEditing.status
+        id:nextProps.itemEditting.id,
+        name:nextProps.itemEditting.name,
+        status:nextProps.itemEditting.status
       });
     }
-    else if(!nextProps.taskEditing){
+    else if(!nextProps.itemEditting){
        this.setState({
          id:'',
          name:'',
@@ -52,10 +55,9 @@ import * as actions from './../actions/index';
       })
       
     }
-    onSubmit = (event) => {
+    onSave = (event) => {
         event.preventDefault();
-        this.props.onAddTask(this.state); 
-        console.log('state',this.state);
+        this.props.onSaveTask(this.state); 
         //hủy bỏ và close form
         this.onClear();
         this.onCloseForm(); 
@@ -68,20 +70,24 @@ import * as actions from './../actions/index';
       })
     }
     render() {
-      var {id}=this.state;
+      if(!this.props.isDisplayForm) return null;
         return (
             <div className="panel panel-warning">
               <div className="panel-heading">
-              <h3 className="panel-title ">{id!==''?'Cập nhập công việc':'Thêm công việc'}
+              <h3 className="panel-title ">{!this.state.id?'Thêm công việc':'Cập nhập công việc'}
                   <span className="bx bx-plus bx-tada text-right" 
                   onClick={this.onCloseForm}>
                   </span></h3>
               </div>
               <div className="panel-body">
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSave}>
                   <div className="form-group">
                     <label>Tên :</label>
-                    <input type="text" className="form-control" name="name" value={this.state.name} onChange={this.onChange} />
+                    <input type="text"
+                     className="form-control"
+                      name="name"
+                      value={this.state.name}
+                      onChange={this.onChange} />
                   </div>
                   <label>Trạng thái : </label>
                   <select className="form-control" name="status" 
@@ -106,12 +112,14 @@ import * as actions from './../actions/index';
 
 const  mapStateToProps=state=>{
   return {
+    isDisplayForm:state.isdisplayForm,
+    itemEditting:state.itemEditting
   }
 };
 const mapDispatchToProps=(dispatch,props)=>{
   return {
-    onAddTask:(task)=>{
-      dispatch(actions.addtask(task))
+    onSaveTask:(task)=>{
+      dispatch(actions.onSaveTask(task))
     },
     onCloseForm:()=>{
       dispatch(actions.closeform())

@@ -31,7 +31,6 @@ class TaskList extends Component {
       var {filterName,filterStatus}=this.state;
       var elementTask=tasks.map((task,index)=>{
           return <TaskItem key={task.id} index={index} task={task}
-          onUpdate={this.props.onUpdate}
           />
       })
         return (
