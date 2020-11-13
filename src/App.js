@@ -3,7 +3,6 @@ import './App.css'
 import Search_Sort from './Components/Search_Sort'
 import TaskList from './Components/TaskList'
 import TaskForm from './Components/TaskForm'
-import _, { sortBy } from 'lodash';
 import {connect} from 'react-redux';
 import * as action from './actions/index';
 
@@ -11,19 +10,12 @@ import * as action from './actions/index';
   constructor(props){
     super(props);
     this.state={
-      filter:{
-        name:'',
-        status:-1
-      }
-      ,
-      keyword:'',
      sortBy:'name',
      sortValue:1
     }
   }
   onTogleFrom =()=>{
     var {itemEditting}=this.props;
-    console.log('edt',itemEditting);
     if(itemEditting&&itemEditting.id!==''){
       this.props.onOpenform();
     }
@@ -37,28 +29,7 @@ import * as action from './actions/index';
     });
       
   }
-  onFilter=(filterName,filterStatus)=>{
-    filterStatus=parseInt(filterStatus,10) ;
-    this.setState({
-      filter:{
-        name:filterName.toLowerCase(),
-        status:filterStatus
-      }
-    });
-  }
-  onSearch=(keyword)=>{
-    this.setState(
-      {
-        keyword:keyword
-      }
-    )
-  }
-  onSort=(sortby,sortvalue)=>{
-    this.setState({
-      sortBy:sortby,
-      sortValue:sortvalue
-    })
-  }
+
   render() {
       var {
      sortBy,
@@ -78,15 +49,9 @@ import * as action from './actions/index';
               <span className="bx bx-plus bx-tada">
                 </span>Thêm công việc
             </button>
-              <Search_Sort onSearch={this.onSearch}
-                onSort={this.onSort}
-                sortBy={sortBy}
-                sortValue={sortValue}
-              />
+              <Search_Sort />
             <div className="row mt-15">
-              <TaskList 
-              onFilter={this.onFilter}
-              />
+              <TaskList />
             </div>
           </div>
         </div>

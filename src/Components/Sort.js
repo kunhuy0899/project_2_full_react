@@ -1,9 +1,13 @@
 import { sortBy } from 'lodash';
 import React, { Component } from 'react'
-
-export default class Sort extends Component {
-  onClick=(sortby,sortvalue)=>{
-    this.props.onSort(sortby,sortvalue);
+import { connect } from 'react-redux';
+import * as action from '../actions/index';
+ class Sort extends Component {
+  onClick=(sortBy,sortValue)=>{
+    this.props.onSort(
+      {sortBy:sortBy,
+        sortValue:sortValue
+      });
   }
     render() {
         return (
@@ -17,22 +21,22 @@ export default class Sort extends Component {
                     <li onClick={()=>this.onClick('name',1)}>
                       <a role="button" 
                  
-                      className={this.props.sortBy==='name'&&this.props.sortValue===1?'sort_selected':''}>
+                      className={this.props.sort.sortBy==='name'&&this.props.sort.sortValue===1?'sort_selected':''}>
                         <span className="bx bx-sort-a-z bx-tada" />Tên A-Z
                       </a>
                     </li>
                     <li onClick={()=>this.onClick('name',-1)}>
-                      <a role="button" className={this.props.sortBy==='name'&&this.props.sortValue===-1?'sort_selected':''}>
+                      <a role="button" className={this.props.sort.sortBy==='name'&&this.props.sort.sortValue===-1?'sort_selected':''}>
                         <span className="bx bx-sort-a-z bx-tada" />Tên z-A
                       </a>
                     </li>
                     <li onClick={()=>this.onClick('status',1)}>
-                      <a role="button" className={this.props.sortBy==='status'&&this.props.sortValue===1?'sort_selected':''}>
+                      <a role="button" className={this.props.sort.sortBy==='status'&&this.props.sort.sortValue===1?'sort_selected':''}>
                         Trạng thái kích hoạt
                       </a>
                     </li>
                     <li onClick={()=>this.onClick('status',-1)}>
-                      <a role="button" className={this.props.sortBy==='status'&&this.props.sortValue===-1?'sort_selected':''}>
+                      <a role="button" className={this.props.sort.sortBy==='status'&&this.props.sort.sortValue===-1?'sort_selected':''}>
                         Trạng thái ẩn
                       </a>
                     </li>
@@ -42,3 +46,17 @@ export default class Sort extends Component {
         )
     }
 }
+
+const  mapStateToProps=state=>{
+  return {
+    sort:state.sort
+  }
+};
+const mapDispatchToProps=(dispatch,props)=>{
+  return {
+    onSort:(sort)=>{
+      dispatch(action.sortTask(sort))
+    }
+  }
+};
+export default connect(mapStateToProps,mapDispatchToProps)(Sort);
